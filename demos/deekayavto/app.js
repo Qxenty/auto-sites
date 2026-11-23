@@ -35,7 +35,12 @@
   const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[m]));
-  const isTelegram = !!(window.Telegram && window.Telegram.WebApp);
+  // Сайт действительно запущен внутри Telegram Mini App только тогда,
+  // когда WebApp инициализирован с корректной initData (в обычном
+  // мобильном браузере Telegram-скрипт не подключается и window.Telegram
+  // отсутствует — тогда переходы идут стандартно через href).
+  const isTelegram = !!(window.Telegram && window.Telegram.WebApp &&
+    window.Telegram.WebApp.initData && window.Telegram.WebApp.initData.length > 0);
 
   /* ---------- Рендер: бейджи и первый экран ---------- */
   (function renderHero() {
@@ -233,7 +238,7 @@
     const t = calcTotals();
     if (!t.selected.length) return '';
     const lines = [];
-    lines.push('Расчёт стоимости детейлинга из DeeKayAvto');
+    lines.push(`Расчёт стоимости детейлинга из ${cfg.name}`);
     lines.push(`${cfg.fullName}, ${cfg.city}, ${cfg.address}`);
     lines.push('');
     lines.push(`Класс авто: ${t.cc.name} (×${t.cc.coef})`);
@@ -254,15 +259,22 @@
   }
 
   /* Отправка в Telegram / копирование */
-  function sendToTelegram(text) {
-    const url = `${cfg.links.telegramApp}?text=${encodeURIComponent(text)}`;
+  function openTelegramLink(url) {
+    // Вызываем WebApp.openTelegramLink ТОЛЬКО внутри Telegram Mini App.
+    // В обычном браузере (включая мобильный Chrome/Safari) переход должен
+    // открываться стандартно — иначе браузер блокирует всплывающие окна.
     if (isTelegram) {
       try {
         window.Telegram.WebApp.openTelegramLink(url);
         return;
       } catch (e) { /* фолбэк ниже */ }
     }
-    window.open(url, '_blank', 'noopener');
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  function sendToTelegram(text) {
+    const url = `${cfg.links.telegramApp}?text=${encodeURIComponent(text)}`;
+    openTelegramLink(url);
   }
 
   function copyText(text) {
@@ -270,7 +282,7 @@
       navigator.clipboard.writeText(text).then(() => {
         // Если внутри Telegram — делимся через нативный диалог
         if (isTelegram) {
-          try { window.Telegram.WebApp.openTelegramLink(`${cfg.links.telegramApp}?text=${encodeURIComponent(text)}`); } catch (e) {}
+          try { openTelegramLink(`${cfg.links.telegramApp}?text=${encodeURIComponent(text)}`); } catch (e) {}
         }
       }).catch(() => fallbackCopy(text));
     } else {
@@ -288,7 +300,7 @@
     try { document.execCommand('copy'); } catch (e) {}
     document.body.removeChild(ta);
     // После копирования пробуем открыть VK
-    window.open(cfg.links.vk, '_blank', 'noopener');
+    window.open(cfg.links.vk, '_blank', 'noopener,noreferrer');
   }
 
   $('#btn-send-tg')?.addEventListener('click', () => {
@@ -356,10 +368,10 @@
         return;
       }
       if (giftSelected.type === 'amount') {
-        text = `Хочу заказать подарочный сертификат DeeKayAvto номиналом ${fmt(giftSelected.value)}.`;
+        text = `Хочу заказать подарочный сертификат ${cfg.name} номиналом ${fmt(giftSelected.value)}.`;
       } else {
         const s = cfg.services.find((x) => x.id === giftSelected.id);
-        text = `Хочу заказать подарочный сертификат DeeKayAvto на услугу «${s ? s.name : giftSelected.id}».`;
+        text = `Хочу заказать подарочный сертификат ${cfg.name} на услугу «${s ? s.name : giftSelected.id}».`;
       }
       text += `\n${cfg.fullName}, ${cfg.city}, ${cfg.address}`;
       sendToTelegram(text);
@@ -405,6 +417,14 @@
     if (descEl) descEl.textContent = cfg.telegramChannel.desc;
     $$('[data-tg-link]').forEach((a) => {
       a.href = cfg.telegramChannel.url || cfg.links.telegramChannel;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+    });
+    // Нижняя панель ведёт в личный чат (а не на канал)
+    $$('[data-tg-personal]').forEach((a) => {
+      a.href = cfg.links.telegramApp;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
     });
   })();
 
@@ -422,7 +442,7 @@
         <h3>Адрес</h3>
         <p>${esc(cfg.city)}, ${esc(cfg.address)}</p>
         <p class="contact-note">${esc(cfg.addressNote)}</p>
-        <a class="btn btn-primary btn-full" href="${esc(cfg.links.yandexMaps)}" target="_blank" rel="noopener">Построить маршрут</a>
+        <a class="btn btn-primary btn-full" href="${esc(cfg.links.route)}" target="_blank" rel="noopener noreferrer">Построить маршрут</a>
       </div>
       <div class="contact-card">
         <h3>График работы</h3>
@@ -434,10 +454,10 @@
       </div>
       <div class="contact-card">
         <h3>Мессенджеры и соцсети</h3>
-        <a class="contact-link" href="${esc(cfg.links.telegramApp)}" target="_blank" rel="noopener">Telegram</a>
-        <a class="contact-link" href="${esc(cfg.links.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="contact-link" href="${esc(cfg.links.vk)}" target="_blank" rel="noopener">VK</a>
-        <a class="contact-link" href="${esc(cfg.links.telegramChannel)}" target="_blank" rel="noopener">Канал @DeeKayAuto</a>
+        <a class="contact-link" href="${esc(cfg.links.telegramApp)}" target="_blank" rel="noopener noreferrer">Telegram</a>
+        <a class="contact-link" href="${esc(cfg.links.twoGis)}" target="_blank" rel="noopener noreferrer">2ГИС</a>
+        <a class="contact-link" href="${esc(cfg.links.vk)}" target="_blank" rel="noopener noreferrer">VK</a>
+        <a class="contact-link" href="${esc(cfg.links.telegramChannel)}" target="_blank" rel="noopener noreferrer">Канал @DeeKayAuto</a>
       </div>
     `;
   })();
@@ -457,6 +477,8 @@
   })();
 
   /* Отладка */
-  console.log('DeeKayAvto demo loaded. Telegram WebApp:', isTelegram);
+  console.log('DeeKayAvto demo loaded. Mini App inside Telegram:', isTelegram);
+
+  /* Отладка */
 
 })();

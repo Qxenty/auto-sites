@@ -5,7 +5,7 @@
  */
 const STUDIO_CONFIG = {
   id: 'deekayavto',
-  name: 'DeeKayAvto',
+  name: 'DeeKayAuto',
   fullName: 'Детейлинг-центр DeeKayAuto',
   city: 'Архангельск',
   address: 'Окружное шоссе, 3к8',
@@ -22,9 +22,10 @@ const STUDIO_CONFIG = {
   links: {
     telegramChannel: 'https://t.me/DeeKayAuto',
     vk: 'https://vk.ru/deekayavto',
-    telegramApp: 'https://t.me/+79115545225',
-    whatsapp: 'https://wa.me/79115545225',
-    yandexMaps: 'https://yandex.ru/maps/?text=Архангельск,%20Окружное%20шоссе,%203к8'
+    // Личный чат для заявок и расчётов
+    telegramApp: 'https://t.me/kalepsprod',
+    twoGis: 'https://2gis.ru/arkhangelsk/geo/70000001019722788',
+    route: 'https://2gis.ru/arkhangelsk/geo/70000001019722788'
   },
   colors: {
     bg: '#0B0C0E',
