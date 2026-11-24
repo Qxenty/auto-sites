@@ -391,7 +391,7 @@
           <img class="ba-img ba-img-after" src="${esc(c.after)}" alt="После — ${esc(c.model)}" style="object-position:${esc(c.afterPosition || 'center center')}" loading="lazy">
           <div class="ba-divider"></div>
           <div class="ba-handle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 15l-3 3m0 0l-3-3m3 3V3"/><path d="M9 9l3 3m0 0l3-3m-3 3V3"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12H17M12 7l-5 5 5 5M12 17l5-5-5-5"/></svg>
           </div>
           <span class="ba-badge ba-badge-before">ДО</span>
           <span class="ba-badge ba-badge-after">ПОСЛЕ</span>

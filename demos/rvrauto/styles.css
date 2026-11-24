@@ -439,6 +439,18 @@ section { padding: 48px 18px; }
   color: var(--text);
   font-size: 15px;
   font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* Скрываем дефолтную браузерную (жёлто-оранжевую) обводку при фокусе */
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.gift-custom-select:focus,
+.gift-custom-select:focus-visible,
+.gift-custom-select:active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.18);
 }
 
 /* === Портфолио «До / После» === */
