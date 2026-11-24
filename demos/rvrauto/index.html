@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0c0c0e">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23e63946'/%3E%3C/svg%3e" type="image/svg+xml">
+  <meta property="og:title" content="RVR AUTO — Детейлинг, автозвук и дооснащение в Казани">
+  <meta property="og:description" content="Профессиональная студия детейлинга, автозвука и дооснащения в Казани. г. Казань, ул. Габдуллы Тукая, 115к4.">
+  <title>RVR AUTO — Детейлинг, автозвук и дооснащение в Казани</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Telegram WebApp скрипт (мягкий фолбэк в обычном браузере) -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Шапка -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <div class="logo">RVR<span>AUTO</span></div>
+      <a class="header-phone" href="tel:+79063275289">+7 (906) 327-52-89</a>
+    </div>
+  </header>
+
+  <!-- Первый экран -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="badges" data-badges></div>
+      <h1 class="hero-title" data-hero-title></h1>
+      <p class="hero-sub" data-hero-sub></p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-large" data-go="calculator">Рассчитать стоимость</button>
+        <button class="btn btn-outline btn-large" data-go="gift">Подарочный сертификат</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Калькулятор -->
+  <section class="calculator" id="calculator">
+    <div class="section-header">
+      <h2 class="section-title">Калькулятор стоимости</h2>
+      <p class="section-sub">Ориентировочный расчёт за 30 секунд</p>
+    </div>
+
+    <div class="calc-steps">
+      <!-- Шаг 1: класс авто -->
+      <div class="calc-step" id="step-class">
+        <div class="step-title"><span class="step-num">1</span>Класс автомобиля</div>
+        <div class="car-classes" data-car-classes></div>
+      </div>
+
+      <!-- Шаг 2: комплексы + услуги -->
+      <div class="calc-step hidden" id="step-packages">
+        <div class="step-title"><span class="step-num">2</span>Готовые комплексы</div>
+        <div class="packages" data-packages></div>
+
+        <div class="step-title step-title-sub"><span class="step-num">3</span>Услуги по отдельности</div>
+        <div class="services-list" data-services></div>
+
+        <button class="btn btn-primary btn-full btn-calc-go" id="btn-calc-result">Рассчитать стоимость</button>
+      </div>
+
+      <!-- Шаг 3: результат -->
+      <div class="calc-step hidden" id="step-result">
+        <div class="step-title">Итоговая стоимость</div>
+        <div class="price-range" data-price-range></div>
+        <div class="discount-badge hidden" data-discount></div>
+        <div class="selected-list" data-selected-list></div>
+        <p class="calc-note" data-calc-note>
+          Ориентировочный расчёт — точный прайс подтвердим после осмотра автомобиля.
+        </p>
+        <div class="calc-actions">
+          <button class="btn btn-primary btn-full" id="btn-send-tg">Отправить расчёт в Telegram</button>
+          <button class="btn btn-outline btn-full" id="btn-copy-wa">Скопировать расчёт / WhatsApp</button>
+          <button class="btn btn-text btn-full" id="btn-back-to-services">Назад к услугам</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Подарочный сертификат -->
+  <section class="gift-section hidden" id="gift">
+    <div class="section-header">
+      <h2 class="section-title">Подарочный сертификат</h2>
+      <p class="section-sub">Подарите уход за автомобилем близким</p>
+    </div>
+    <div class="gift-options" data-gift-options></div>
+    <label class="gift-custom hidden" data-gift-custom-wrap>
+      <span class="gift-custom-label">На конкретную услугу</span>
+      <select class="gift-custom-select" data-gift-custom-select></select>
+    </label>
+    <button class="btn btn-primary btn-full" id="btn-gift-tg">Заказать сертификат в Telegram</button>
+  </section>
+
+  <!-- Портфолио «До / После» -->
+  <section class="cases" id="cases">
+    <div class="section-header">
+      <h2 class="section-title">До / После</h2>
+      <p class="section-sub">Интерактивная шторка — проведите ползунком, чтобы сравнить</p>
+    </div>
+    <div class="cases-grid" data-cases></div>
+  </section>
+
+  <!-- Telegram-канал -->
+  <section class="telegram-channel" id="telegram">
+    <div class="tg-inner">
+      <div class="tg-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="40" height="40">
+          <path fill="currentColor" d="M21.915 4.115l-3.36 15.843c-.254 1.25-.915 1.556-1.855.969l-5.12-3.77-2.47 2.378c-.273.273-.502.502-1.029.502l.368-5.18 9.43-8.517c.41-.365-.089-.568-.636-.203L6.095 13.283l-5.01-1.565c-1.089-.34-1.11-1.089.227-1.61L20.534 2.57c.898-.33 1.687.203 1.381 1.545z"/>
+        </svg>
+      </div>
+      <h2 class="tg-title" data-tg-title></h2>
+      <p class="tg-desc" data-tg-desc></p>
+      <a class="btn btn-outline" data-tg-link href="https://t.me/RVR_AUTO" target="_blank" rel="noopener noreferrer">Перейти в канал</a>
+    </div>
+  </section>
+
+  <!-- Контакты -->
+  <section class="contacts" id="contacts">
+    <div class="section-header">
+      <h2 class="section-title">Контакты</h2>
+    </div>
+    <div class="contacts-grid" data-contacts></div>
+  </section>
+
+  <!-- Липкая нижняя мобильная панель -->
+  <nav class="bottom-bar" data-bottom-bar>
+    <a class="bottom-item" href="tel:+79063275289" data-bottom-call>
+      <svg class="bottom-icon" viewBox="0 0 24 24" width="22" height="22">
+        <path fill="currentColor" d="M6.62 10.79c1.44-2.83 3.76-5.14 6.59-6.59l2.2-2.2c.21-.21.5-.33.8-.33s.59.12.8.33l2.2 2.2c.21.21.33.5.33.8s-.12.59-.33.8L10.45 17c-1.19 1.19-2.25 1.84-3.39 1.84s-2.2-.65-3.39-1.84c-1.19-1.19-1.84-2.2-1.84-3.39 0-.3.08-.59.17-.82l2.18-2.18c.4-.41.91-.66 1.48-.66.58 0 1.09.25 1.48.66zM16.61 13.01c-.41.41-.92.66-1.48.66-.57 0-1.08-.25-1.49-.66l-2.2-2.2c-.41-.41-.66-.92-.66-1.48s.25-1.08.66-1.49l2.2-2.2c.41-.41.92-.66 1.49-.66.57 0 1.08.25 1.49.66l1.06 1.06c.21.21.33.5.33.8s-.12.59-.33.8L14.13 9c-1.19 1.19-1.84 2.2-1.84 3.39s.65 2.2 1.84 3.39l1.06 1.06c.21.21.33.5.33.8s-.12.59-.33.8z"/>
+      </svg>
+      <span>Позвонить</span>
+    </a>
+    <button class="bottom-item" data-go="calculator">
+      <svg class="bottom-icon" viewBox="0 0 24 24" width="22" height="22">
+        <path fill="currentColor" d="M7 2h10c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H7c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2zm0 2v4h10V4H7zm0 6v4h3v-4H7zm5 0v4h3v-4h-3zm-5 6v4h3v-4H7zm5 0v4h3v-4h-3z"/>
+      </svg>
+      <span>Расчёт</span>
+    </button>
+    <a class="bottom-item" data-tg-personal href="https://t.me/RVR_AUTO_KZN" target="_blank" rel="noopener noreferrer">
+      <svg class="bottom-icon" viewBox="0 0 24 24" width="22" height="22">
+        <path fill="currentColor" d="M21.915 4.115l-3.36 15.843c-.254 1.25-.915 1.556-1.855.969l-5.12-3.77-2.47 2.378c-.273.273-.502.502-1.029.502l.368-5.18 9.43-8.517c.41-.365-.089-.568-.636-.203L6.095 13.283l-5.01-1.565c-1.089-.34-1.11-1.089.227-1.61L20.534 2.57c.898-.33 1.687.203 1.381 1.545z"/>
+      </svg>
+      <span>Telegram</span>
+    </a>
+  </nav>
+
+  <script src="studio-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
